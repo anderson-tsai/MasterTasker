@@ -14,7 +14,7 @@
 
 
 
-        <!--  ListRow Left sied Thumbnail image -->
+        <!--  ListRow Left side Thumbnail image -->
         <LinearLayout android:id="@+id/thumbnail"
             android:visibility="visible"
             android:layout_width="wrap_content"
@@ -58,8 +58,16 @@
                 android:text="Task Date"
                 android:typeface="sans"
                 android:textSize="14sp"/>
+
+            <TextView
+                android:id="@+id/task_time"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="#676464"
+                android:text="Time Spent: NA" />
         </LinearLayout>
 
 
     </LinearLayout>
+
 </LinearLayout>

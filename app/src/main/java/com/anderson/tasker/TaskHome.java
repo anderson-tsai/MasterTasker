@@ -16,26 +16,23 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-
-/**
- * Created by Ferdousur Rahman Sarker on 3/16/2018.
- */
-
 public class TaskHome extends AppCompatActivity {
 
     Activity activity;
     TaskDBHelper mydb;
-    NoScrollListView taskListToday, taskListTomorrow, taskListUpcoming;
+    NoScrollListView taskListToday, taskListTomorrow, taskListUpcoming, taskListTimes;
     NestedScrollView scrollView;
     ProgressBar loader;
-    TextView todayText,tomorrowText,upcomingText;
+    TextView todayText,tomorrowText,upcomingText, timeText;
     ArrayList<HashMap<String, String>> todayList = new ArrayList<HashMap<String, String>>();
     ArrayList<HashMap<String, String>> tomorrowList = new ArrayList<HashMap<String, String>>();
     ArrayList<HashMap<String, String>> upcomingList = new ArrayList<HashMap<String, String>>();
+    ArrayList<HashMap<String, String>> timesList = new ArrayList<HashMap<String, String>>();
 
     public static String KEY_ID = "id";
     public static String KEY_TASK = "task";
     public static String KEY_DATE = "date";
+    public static String KEY_TIME = "time";
 
 
     @Override
@@ -50,11 +47,12 @@ public class TaskHome extends AppCompatActivity {
         taskListToday = (NoScrollListView) findViewById(R.id.taskListToday);
         taskListTomorrow = (NoScrollListView) findViewById(R.id.taskListTomorrow);
         taskListUpcoming = (NoScrollListView) findViewById(R.id.taskListUpcoming);
+        taskListTimes = (NoScrollListView) findViewById(R.id.taskListTimes);
 
         todayText = (TextView) findViewById(R.id.todayText);
         tomorrowText = (TextView) findViewById(R.id.tomorrowText);
         upcomingText = (TextView) findViewById(R.id.upcomingText);
-
+        timeText = (TextView) findViewById(R.id.times);
     }
 
 
@@ -94,6 +92,7 @@ public class TaskHome extends AppCompatActivity {
             todayList.clear();
             tomorrowList.clear();
             upcomingList.clear();
+            timesList.clear();
         }
 
         protected String doInBackground(String... args) {
@@ -114,6 +113,11 @@ public class TaskHome extends AppCompatActivity {
             loadDataList(upcoming, upcomingList);
             /* ===== UPCOMING ========*/
 
+            /* ===== TIMES ========*/
+            Cursor times = mydb.getDataTimes();
+            loadDataList(times, timesList);
+            /* ===== TIMES ========*/
+
             return xml;
         }
 
@@ -124,6 +128,7 @@ public class TaskHome extends AppCompatActivity {
             loadListView(taskListToday,todayList);
             loadListView(taskListTomorrow,tomorrowList);
             loadListView(taskListUpcoming,upcomingList);
+//            loadListView(taskListTimes, timesList);
 
 
             if(todayList.size()>0)
@@ -147,6 +152,12 @@ public class TaskHome extends AppCompatActivity {
                 upcomingText.setVisibility(View.GONE);
             }
 
+            if(timesList.size()>0)
+            {
+                upcomingText.setVisibility(View.VISIBLE);
+            }else{
+                upcomingText.setVisibility(View.GONE);
+            }
 
             loader.setVisibility(View.GONE);
             scrollView.setVisibility(View.VISIBLE);
@@ -165,6 +176,7 @@ public class TaskHome extends AppCompatActivity {
                 mapToday.put(KEY_ID, cursor.getString(0).toString());
                 mapToday.put(KEY_TASK, cursor.getString(1).toString());
                 mapToday.put(KEY_DATE, Function.Epoch2DateString(cursor.getString(2).toString(), "dd-MM-yyyy"));
+                mapToday.put(KEY_TIME, Integer.toString(cursor.getInt(3)));
                 dataList.add(mapToday);
                 cursor.moveToNext();
             }

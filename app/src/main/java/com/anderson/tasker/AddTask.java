@@ -3,8 +3,11 @@ package com.anderson.tasker;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.os.SystemClock;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.Chronometer;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -13,10 +16,6 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
-
-/**
- * Created by Ferdousur Rahman Sarker on 3/17/2018.
- */
 
 public class AddTask extends AppCompatActivity implements DatePickerDialog.OnDateSetListener {
 
@@ -31,6 +30,10 @@ public class AddTask extends AppCompatActivity implements DatePickerDialog.OnDat
     Boolean isUpdate;
     String id;
 
+    Chronometer chronometer;
+    private long pauseOffset;
+    boolean running;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,7 +43,7 @@ public class AddTask extends AppCompatActivity implements DatePickerDialog.OnDat
         intent = getIntent();
         isUpdate = intent.getBooleanExtra("isUpdate", false);
 
-
+        chronometer = findViewById(R.id.chronometer);
 
         dateFinal = todayDateString();
         Date your_date = new Date();
@@ -102,12 +105,12 @@ public class AddTask extends AppCompatActivity implements DatePickerDialog.OnDat
   /* Checking */
         if (nameFinal.trim().length() < 1) {
             errorStep++;
-            task_name.setError("Provide a task name.");
+            task_name.setError("Please enter a task name");
         }
 
         if (dateFinal.trim().length() < 4) {
             errorStep++;
-            task_date.setError("Provide a specific date");
+            task_date.setError("Please enter a valid date");
         }
 
 
@@ -115,10 +118,10 @@ public class AddTask extends AppCompatActivity implements DatePickerDialog.OnDat
         if (errorStep == 0) {
             if (isUpdate) {
                 mydb.updateContact(id, nameFinal, dateFinal);
-                Toast.makeText(getApplicationContext(), "Task Updated.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "Task Updated", Toast.LENGTH_SHORT).show();
             } else {
                 mydb.insertContact(nameFinal, dateFinal);
-                Toast.makeText(getApplicationContext(), "Task Added.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "Task Added", Toast.LENGTH_SHORT).show();
             }
 
             finish();
@@ -156,4 +159,45 @@ public class AddTask extends AppCompatActivity implements DatePickerDialog.OnDat
         dpd.show(getFragmentManager(), "startDatepickerdialog");
     }
 
+    public void startChronometer(View v){
+        if (!running) {
+            chronometer.setBase(SystemClock.elapsedRealtime() - pauseOffset);
+            chronometer.start();
+            running = true;
+        }
+    }
+
+    public void stopChronometer(View v){
+        if (running) {
+            chronometer.stop();
+            pauseOffset = SystemClock.elapsedRealtime() - chronometer.getBase();
+            running = false;
+        }
+    }
+
+    public void sendChronometer(View v){
+        long timeElapsed = SystemClock.elapsedRealtime() - chronometer.getBase();
+        int hours = (int) (timeElapsed / 3600000);
+        int minutes = (int) (timeElapsed - hours * 3600000) / 60000;
+        int seconds = (int) (timeElapsed - hours * 3600000 - minutes * 60000) / 1000;
+        mydb.insertContactTime(id, seconds);
+
+        if (hours != 0) {
+            Toast.makeText(getApplicationContext(), "That took you " + hours + "hours, " + minutes + "minutes and"
+                            + seconds + " seconds. Not too bad!", Toast.LENGTH_SHORT).show();
+        }
+        else if (hours == 0 && minutes != 0) {
+            Toast.makeText(getApplicationContext(), "That took you " + minutes + " minutes and " + seconds + " seconds. " +
+                            "Pretty quick!", Toast.LENGTH_SHORT).show();
+        }
+        else if (hours == 0 && minutes == 0 && seconds != 0) {
+            Toast.makeText(getApplicationContext(), "That took you " + seconds + " seconds! You're a speed demon!",
+                    Toast.LENGTH_SHORT).show();
+        }
+        else{
+            Toast.makeText(getApplicationContext(), "You finished instantly! What a beast!",
+                    Toast.LENGTH_SHORT).show();
+        }
+
+    }
 }

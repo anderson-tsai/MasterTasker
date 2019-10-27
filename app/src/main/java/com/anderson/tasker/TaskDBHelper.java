@@ -10,13 +10,9 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-/**
- * Created by Ferdousur Rahman Sarker on 3/19/2018.
- */
-
 public class TaskDBHelper extends SQLiteOpenHelper {
 
-    public static final String DATABASE_NAME = "ToDoDBHelper.db";
+    public static final String DATABASE_NAME = "TaskerDBHelper.db";
     public static final String CONTACTS_TABLE_NAME = "todo";
 
     public TaskDBHelper(Context context)
@@ -30,7 +26,7 @@ public class TaskDBHelper extends SQLiteOpenHelper {
 
         db.execSQL(
                 "CREATE TABLE "+CONTACTS_TABLE_NAME +
-                        "(id INTEGER PRIMARY KEY, task TEXT, dateStr INTEGER)"
+                        "(id INTEGER PRIMARY KEY, task TEXT, dateStr INTEGER, time LONG)"
         );
     }
 
@@ -61,8 +57,10 @@ public class TaskDBHelper extends SQLiteOpenHelper {
         Date date;
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
+
         contentValues.put("task", task);
         contentValues.put("dateStr", getDate(dateStr));
+
         db.insert(CONTACTS_TABLE_NAME, null, contentValues);
         return true;
     }
@@ -79,6 +77,16 @@ public class TaskDBHelper extends SQLiteOpenHelper {
         return true;
     }
 
+    public boolean insertContactTime (String id, int time)
+    {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+
+        contentValues.put("time", time);
+
+        db.update(CONTACTS_TABLE_NAME, contentValues, "id = ? ", new String[] { id } );
+        return true;
+    }
 
 
     public Cursor getData(){
@@ -119,6 +127,13 @@ public class TaskDBHelper extends SQLiteOpenHelper {
                 " WHERE date(datetime(dateStr / 1000 , 'unixepoch', 'localtime')) > date('now', '+1 day', 'localtime') order by id desc", null);
         return res;
 
+    }
+
+    public Cursor getDataTimes(){
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor res =  db.rawQuery("select * from "+CONTACTS_TABLE_NAME+
+                " WHERE time < 3600 order by id desc", null);
+        return res;
     }
 
 
