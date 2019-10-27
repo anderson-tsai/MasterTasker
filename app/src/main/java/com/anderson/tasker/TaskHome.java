@@ -128,7 +128,7 @@ public class TaskHome extends AppCompatActivity {
             loadListView(taskListToday,todayList);
             loadListView(taskListTomorrow,tomorrowList);
             loadListView(taskListUpcoming,upcomingList);
-//            loadListView(taskListTimes, timesList);
+            loadListView(taskListTimes, timesList);
 
 
             if(todayList.size()>0)
