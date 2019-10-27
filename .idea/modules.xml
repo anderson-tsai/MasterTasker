@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/ToDoTask.iml" filepath="$PROJECT_DIR$/ToDoTask.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Tasker - Git.iml" filepath="$PROJECT_DIR$/Tasker - Git.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
   </component>

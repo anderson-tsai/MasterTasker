@@ -1,0 +1,41 @@
+
+{
+  "project_info": {
+    "project_number": "284559865148",
+    "firebase_url": "https://mastertasker-ec288.firebaseio.com",
+    "project_id": "mastertasker-ec288",
+    "storage_bucket": "mastertasker-ec288.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:284559865148:android:1b74cfae902548bc995a39",
+        "android_client_info": {
+          "package_name": "com.anderson.tasker"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "284559865148-4lflegkte3gifvu6cvd0ltf6lckf2ec6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDrydpvn_mjn2pjE2DQjE1_MCXu4NpSZyU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "284559865148-4lflegkte3gifvu6cvd0ltf6lckf2ec6.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
